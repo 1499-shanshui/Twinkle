@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>520方格卡片</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui, sans-serif;}
+body{background:#f5f7fa;padding:16px 12px;}
+h1{text-align:center;margin-bottom:20px;color:#333;font-size:22px;}
+.grid-container{
+  display:grid;
+  grid-template-columns: repeat(5, 1fr);  /* 一行5格 */
+  gap:8px;
+  max-width:620px;
+  margin:0 auto;
+}
+.grid-item{
+  background:#409eff;
+  color:#fff;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
+}
+.grid-item:active{
+  background:#337ecc;
+}
+
+/* 弹窗遮罩层 */
+.modal-mask{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:999;
+}
+.modal-box{
+  background:#fff;
+  border-radius:14px;
+  padding:40px 24px;
+  max-width:500px;
+  width:100%;
+  box-shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+.num{
+  font-size:20px;
+  color:#409eff;
+  margin-bottom:16px;
+  font-weight:bold;
+}
+.text{
+  font-size:20px;
+  color:#333;
+  line-height:1.8;
+}
+.close-btn{
+  display:block;
+  width:fit-content;
+  margin:30px auto 0;
+  padding:10px 24px;
+  background:#409eff;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+<h1>点击方格查看内容</h1>
+<div class="grid-container" id="gridWrap"></div>
+
+<!-- 弹窗 -->
+<div class="modal-mask" id="modal">
+  <div class="modal-box">
+    <div class="num">序号：<span id="sid"></span></div>
+    <div class="text" id="stext"></div>
+    <button class="close-btn" id="closeBtn">关闭</button>
+  </div>
+</div>
+
+<script>
+// ========== 在这里填写每个序号对应的句子 ==========
+const data = {
+  1: "第一句话，你可以改成你想要的文字",
+  2: "第二句话，自定义内容",
+  3: "第三句话",
+  // 格式示例：
+  // 4: "xxx",
+  // 5: "xxx",
+  // ……一直到 520: "xxx"
+};
+
+const modal = document.getElementById('modal');
+const sidDom = document.getElementById('sid');
+const stextDom = document.getElementById('stext');
+const closeBtn = document.getElementById('closeBtn');
+const gridWrap = document.getElementById('gridWrap');
+
+// 自动生成 1~520 的方格
+for(let i = 1; i <= 520; i++){
+  const div = document.createElement('div');
+  div.className = 'grid-item';
+  div.dataset.id = i;
+  div.innerText = i;
+  div.onclick = function(){
+    const id = this.dataset.id;
+    sidDom.innerText = id;
+    stextDom.innerText = data[id] ?? "暂无内容";
+    modal.style.display = 'flex';
+  }
+  gridWrap.appendChild(div);
+}
+
+// 关闭按钮
+closeBtn.onclick = function(){
+  modal.style.display = 'none';
+}
+// 点击遮罩空白处关闭弹窗
+modal.onclick = function(e){
+  if(e.target === modal){
+    modal.style.display = 'none';
+  }
+}
+</script>
+</body>
+</html>
